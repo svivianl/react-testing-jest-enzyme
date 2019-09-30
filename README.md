@@ -29,6 +29,18 @@ google **npm babel plugin-react-remove-properties** copy what is in **Usage>with
 if you don't have a static server, you will need to `npm i -g serve` (it will give you a message in case you don't have it after you run `npm run build`)
 `serve -s build` to run the app
 
+### Prop-types
+
+```
+npm i --save prop-types
+npm i --save-dev check-prop-types
+```
+
+### Extract Enzyme setup to setupTests.js
+
+setupTests.js file has the configuration that you want to run for each test file
+
+If you have an app that wasn't created using create-react-app, you need to edit the jestConfig.js file and insert `setupTestFrameworkScriptFile: '<rootDir>/test/setupTests.js',` inside of `module.exports` and before `moduleNameWrapper`.
 
 ### Test run
 Run `npm test`
