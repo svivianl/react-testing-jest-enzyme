@@ -42,5 +42,11 @@ setupTests.js file has the configuration that you want to run for each test file
 
 If you have an app that wasn't created using create-react-app, you need to edit the jestConfig.js file and insert `setupTestFrameworkScriptFile: '<rootDir>/test/setupTests.js',` inside of `module.exports` and before `moduleNameWrapper`.
 
+### Thunk
+
+```
+npm i redux-thunk
+```
+
 ### Test run
 Run `npm test`
