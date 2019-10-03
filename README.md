@@ -48,5 +48,17 @@ If you have an app that wasn't created using create-react-app, you need to edit 
 npm i redux-thunk
 ```
 
+### moxios
+
+Is called instead of the HTTP
+Lets us test the app
+* whithout testing server
+* without even **running** server
+
+```
+npm i axios
+npm i --save-dev moxios
+```
+
 ### Test run
 Run `npm test`
