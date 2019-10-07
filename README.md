@@ -60,5 +60,10 @@ npm i axios
 npm i --save-dev moxios
 ```
 
+### setupTests
+
+`disableLifecycleMethods` disables life-cycle methods when `.test.js` runs `shallow` wrapper.
+
+
 ### Test run
 Run `npm test`

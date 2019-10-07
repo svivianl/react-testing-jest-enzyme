@@ -2,7 +2,8 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import { findByTestAttr, storeFactory } from './testUtils';
-import Input from '../components/Input';
+import Input, { UnconnectedInput } from '../components/Input';
+import { wrap } from 'module';
 
 const setup = (initialState = {}) => {
     const store = storeFactory(initialState);
@@ -60,17 +61,49 @@ describe('render', () => {
     });
 });
 
-describe('update', () => {
-    test('', () => {
-
+describe('redux props', () => {
+    test('has success piece of state as prop', () => {
+        const success = true;
+        const wrapper = setup({success});
+        const prop = wrapper.instance().props.success;
+        expect(prop).toBe(true);
     });
 
-    test('', () => {
-
-    });
-
-    test('', () => {
-
+    test('"guessWord" action creator is a function prop', () => {
+        const wrapper = setup();
+        const prop = wrapper.instance().props.guessWord;
+        expect(prop).toBeInstanceOf(Function);
     });
 });
 
+describe('"guessWord" action creator call', () => {
+    let guessWordMock;
+    let wrapper;
+    const guessedWord = 'train';
+    
+    beforeEach(() => {
+        guessWordMock = jest.fn();
+        const props = {
+            guessWord: guessWordMock
+        };
+
+        wrapper = shallow(<UnconnectedInput {...props} />);
+        wrapper.setState({ currentGuess: guessedWord });
+        const submitButton = findByTestAttr(wrapper, 'submit-button');
+        submitButton.simulate('click', { preventDefault(){} });
+    });
+
+    test('calls "guessedWord" when button is clicked', () => {
+        const guessedWordCallCount = guessWordMock.mock.calls.length;
+        expect(guessedWordCallCount).toBe(1);
+    });
+
+    test('calls "guessWord" with input value as argument', () => {
+        const guessArgument = guessWordMock.mock.calls[0][0];
+        expect(guessArgument).toBe(guessedWord);
+    });
+
+    test('input box clears on submit', () => {
+        expect(wrapper.state('currentGuess')).toBe('');
+    });
+})

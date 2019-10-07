@@ -1,5 +1,9 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Server
+
+Clone or fork [repository](https://github.com/flyrightsister/udemy-react-testing-projects/tree/master/random-word-server) and check installation instructions in `README.md`.
+
 ## Available Scripts
 
 In the project directory, you can run:

@@ -1,22 +1,39 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import GuessWords from './GuessWords';
 import Congrats from './Congrats';
+import Input from './Input';
 import '../App.css';
+import { getSecretWord, resetGame } from '../actions';
 
-class App extends Component {
+export class UnconnectedApp extends Component {
+
+  componentDidMount(){
+    this.props.getSecretWord();
+  }
 
   render(){
 
     return (
       <div className="container">
         <h1>JOTTO</h1>
-       <Congrats success={true}/>
-       <GuessWords guessedWords={[{guessedWord: 'train', letterMatchCount: 3},
-        {guessedWord: 'agile', letterMatchCount: 1},
-        {guessedWord: 'party', letterMatchCount: 5}]}/>
+        <button data-test='reset-button'
+            type='submit'
+            onClick={e => this.props.resetGame()}
+            className='btn btn-primary mb-2'>
+            Reset
+        </button>
+        <div>The secret word is {this.props.secretWord}</div>
+        <Congrats success={this.props.success}/>
+        <Input />
+        <GuessWords guessedWords={this.props.guessedWords}/>
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  const { success, guessedWords, secretWord } = state;
+  return { success, guessedWords, secretWord };
+}
+export default connect(mapStateToProps, { getSecretWord, resetGame })(UnconnectedApp);

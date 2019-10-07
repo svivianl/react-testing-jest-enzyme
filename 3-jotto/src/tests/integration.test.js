@@ -1,5 +1,5 @@
 import { storeFactory } from './testUtils';
-import { guessWord } from '../actions';
+import { getSecretWord, guessWord, resetGame } from '../actions';
 
 describe('guessedWord action dispatcher', () => {
     const secretWord = 'party';
@@ -68,6 +68,53 @@ describe('guessedWord action dispatcher', () => {
                 guessedWords: [...guessedWords, {guessedWord: secretWord, letterMatchCount: secretWord.length}]
             }
             expect(newState).toEqual(expectedState);
+        });
+    });
+});
+
+describe('Reset action', () => {
+    const secretWord = 'party';
+    let newState;
+
+    describe('after a successful guess', () => {
+        beforeEach( async () => {
+            const guessedWords = [ 
+                {guessedWord: 'agile', letterMatchCount: 1},  
+                {guessedWord: 'party', letterMatchCount: 5},  
+            ];
+            const initialState = { guessedWords, secretWord, success: true };
+            const store = storeFactory(initialState);
+            await store.dispatch(resetGame());
+            newState = store.getState();
+        });
+        test('updates secretWord', () => {
+            expect(newState.secretWord).not.toBe(secretWord);    
+        });
+        test('updates success to be false', () => {
+            expect(newState.success).toBe(false);    
+        });
+        test('updates guessedWords', () => {
+            expect(newState.guessedWords).toEqual([]);    
+        });
+    });
+    describe('before a successful guess', () => {
+        beforeEach(async () => {
+            const guessedWords = [ 
+                {guessedWord: 'agile', letterMatchCount: 1},
+            ];
+            const initialState = { guessedWords, secretWord, success: false };
+            const store = storeFactory(initialState);
+            await store.dispatch(resetGame());
+            newState = store.getState();
+        });
+        test('updates secretWord', () => {
+            expect(newState.secretWord).not.toBe(secretWord);    
+        });
+        test('updates success to be false', () => {
+            expect(newState.success).toBe(false);    
+        });
+        test('updates guessedWords', () => {
+            expect(newState.guessedWords).toEqual([]);    
         });
     });
 });

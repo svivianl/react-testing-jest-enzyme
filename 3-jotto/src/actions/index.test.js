@@ -36,7 +36,4 @@ describe('getSecretWord action creator', () => {
                 expect(newState.secretWord).toBe(secretWord);
             })
     });
-    test('', () => {
-
-    });
 });

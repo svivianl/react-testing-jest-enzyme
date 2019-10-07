@@ -8,6 +8,9 @@ export default (state=[], action) => {
             // return [...state, newGuessedWords];
             return [...state, action.payload];
         }
+        case actionTypes.RESET_GAME:{
+            return [];
+        }
         default:{
             return state;
         }
