@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import GuessWords from './GuessWords';
 import Congrats from './Congrats';
 import Input from './Input';
+import Reset from './Reset';
+import GiveUp from './GiveUp';
 import '../App.css';
-import { getSecretWord, resetGame } from '../actions';
+import { getSecretWord, resetGame, giveUp } from '../actions';
 
 export class UnconnectedApp extends Component {
 
@@ -17,13 +19,9 @@ export class UnconnectedApp extends Component {
     return (
       <div className="container">
         <h1>JOTTO</h1>
-        <button data-test='reset-button'
-            type='submit'
-            onClick={e => this.props.resetGame()}
-            className='btn btn-primary mb-2'>
-            Reset
-        </button>
+        <Reset resetGame={this.props.resetGame}/>
         <div>The secret word is {this.props.secretWord}</div>
+        <GiveUp giveUp={this.props.giveUp}/>
         <Congrats success={this.props.success}/>
         <Input />
         <GuessWords guessedWords={this.props.guessedWords}/>
@@ -36,4 +34,4 @@ const mapStateToProps = (state) => {
   const { success, guessedWords, secretWord } = state;
   return { success, guessedWords, secretWord };
 }
-export default connect(mapStateToProps, { getSecretWord, resetGame })(UnconnectedApp);
+export default connect(mapStateToProps, { getSecretWord, resetGame, giveUp })(UnconnectedApp);

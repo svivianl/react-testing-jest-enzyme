@@ -1,8 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { storeFactory, findByTestAttr } from '../tests/testUtils';
+import { storeFactory } from '../tests/testUtils';
 import App, { UnconnectedApp } from '../components/App';
-import { wrap } from 'module';
 
 const setup = (state={}) => {
   const store = storeFactory(state);
@@ -37,12 +36,6 @@ describe('redux properties', () => {
     const prop = wrapper.instance().props.getSecretWord;
     expect(prop).toBeInstanceOf(Function);
   });
-
-  test('has Reset button', () => {
-    const wrapper = setup();
-    const button = findByTestAttr(wrapper, 'reset-button');
-    expect(button.length).toBe(1);
-  });
 });
 
 describe('life-cycle methods', () => {
@@ -68,31 +61,4 @@ describe('life-cycle methods', () => {
 
     expect(getSecretWordCallCount).toBe(1);
   });  
-});
-
-test('call resetGame on Reset', () => {
-
-  // create Mock function that jest will just watch to see when it is called and how
-  const getSecretWordMock = jest.fn();
-  const resetGameMock = jest.fn();    
-  const props = {
-    getSecretWord: getSecretWordMock,
-    resetGame: resetGameMock,
-    success: false,
-    guessedWords: [
-      {guessedWord: 'train', letterMatchCount: 3},
-      {guessedWord: 'agile', letterMatchCount: 1},
-      {guessedWord: 'party', letterMatchCount: 5}
-    ],
-    secretWord: 'party',
-  }
-
-  // set up app component with getSecretWordMock as the getSecretWord prop
-  const wrapper = shallow(<UnconnectedApp {...props} />);
-  wrapper.instance().componentDidMount();
-  const resetButton = findByTestAttr(wrapper, 'reset-button');
-  resetButton.simulate('click', { preventDefault(){} });
-  // check to see if mock ran and how many times it was called
-  const getResetGameCallCount = resetGameMock.mock.calls.length;
-  expect(getResetGameCallCount).toBe(1);
 });
