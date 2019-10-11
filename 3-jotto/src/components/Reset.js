@@ -4,12 +4,20 @@ import { resetGame } from '../actions';
 
 export class UnconnectedReset extends Component {
 
+  constructor(props){
+    super(props);
+    this.handleReset = this.handleReset.bind(this);
+  }
+  handleReset(e){
+    e.preventDefault();
+    this.props.resetGame();
+  }
   render(){
 
     return (
         <button data-test='reset-button'
             type='submit'
-            onClick={e => this.props.resetGame()}
+            onClick={this.handleReset}
             className='btn btn-primary mb-2'>
             Reset
         </button>
