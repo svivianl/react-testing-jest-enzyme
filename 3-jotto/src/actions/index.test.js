@@ -38,5 +38,35 @@ describe('getSecretWord action creator', () => {
             });
     });
 
-    
+    test('when server returns 4xx status', () => {
+        const errorResponse = {
+            status: 404,
+            response: { message: '404 error' }
+        }
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            return request.reject(errorResponse);
+        });
+
+        return store.dispatch(getSecretWord())
+            .catch(e => {
+                expect(e).toEqual(errorResponse);
+            });
+    });
+    test('when server returns 5xx status', () => {
+        const errorResponse = {
+            status: 500,
+            response: { message: '500 error' }
+        }
+
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            return request.reject(errorResponse);
+        });
+
+        return store.dispatch(getSecretWord())
+            .catch(e => {
+                expect(e).toEqual(errorResponse);
+            });
+    });
 });
