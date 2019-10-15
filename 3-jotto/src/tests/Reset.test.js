@@ -8,8 +8,8 @@ const setup = (state={}) => {
   return shallow(<Reset store={store}/>).dive().dive();
 }
 
-describe('redux properties', () => {
-  test('has Reset button', () => {
+describe('render', () => {
+  test('Reset button', () => {
     const wrapper = setup();
     const button = findByTestAttr(wrapper, 'reset-button');
     expect(button.length).toBe(1);

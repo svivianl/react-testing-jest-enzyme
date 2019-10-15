@@ -1,12 +1,35 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { storeFactory } from '../tests/testUtils';
+import { storeFactory, findByTestAttr } from '../tests/testUtils';
 import App, { UnconnectedApp } from '../components/App';
 
 const setup = (state={}) => {
   const store = storeFactory(state);
   return shallow(<App store={store}/>).dive().dive();
 }
+
+describe('renders', () => {
+  test('has "Reset" button when giveUp is false', () => {
+    const wrapper = setup({giveUp: false});
+    const button = findByTestAttr(wrapper, 'reset-component');
+    expect(button.length).toBe(1);
+  });
+  test('has not "Reset" button when giveUp is true', () => {
+    const wrapper = setup({giveUp: true});
+    const button = findByTestAttr(wrapper, 'reset-component');
+    expect(button.length).toBe(0);
+  });
+  test('has not "Give up" component when SUCCESS', () => {
+    const wrapper = setup({success: true});
+    const button = findByTestAttr(wrapper, 'give-up-component');
+    expect(button.length).toBe(0);
+  });
+  test('has "Give up" component when not SUCCESS', () => {
+    const wrapper = setup({success: false});
+    const button = findByTestAttr(wrapper, 'give-up-component');
+    expect(button.length).toBe(1);
+  });
+});
 
 describe('redux properties', () => {
 

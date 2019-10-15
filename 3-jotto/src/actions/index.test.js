@@ -1,6 +1,6 @@
 import moxios from 'moxios';
 
-import { actionTypes } from '.';
+// import { actionTypes } from '.';
 import { storeFactory } from '../tests/testUtils';
 import { getSecretWord } from './';
 

@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { resetGame } from '../actions';
+import { giveUpAction, resetGame } from '../actions';
 
 export class UnconnectedGiveUp extends Component {
 
@@ -12,10 +12,13 @@ export class UnconnectedGiveUp extends Component {
         this.handleGiveUp = this.handleGiveUp.bind(this);
         this.handleNewWord = this.handleNewWord.bind(this);
     }
+
     handleGiveUp(e){
         e.preventDefault();
         this.setState({ giveUpSecretWord: this.props.secretWord });
+        this.props.giveUpAction();
     }
+
     handleNewWord(e){
         e.preventDefault();
         this.setState({ giveUpSecretWord: '' });
@@ -24,34 +27,34 @@ export class UnconnectedGiveUp extends Component {
   render(){
     return (
         <Fragment>
-            {!this.props.success && 
+            {this.props.giveUp ? (
+                this.state.giveUpSecretWord && 
+                    <Fragment>
+                        <div data-test='give-up-secret-word' className='alert alert-danger'>
+                            The secret word was <b>{this.state.giveUpSecretWord}</b>
+                        </div>
+                        <button data-test='new-word-button'
+                            type='submit'
+                            onClick={this.handleNewWord}
+                            className='btn btn-primary mb-2'>
+                            New Word
+                        </button>
+                    </Fragment>
+            ) : (
                 <button data-test='give-up-button'
                     type='submit'
                     onClick={this.handleGiveUp}
                     className='btn btn-primary mb-2'>
                     Give up
                 </button>
-            }
-            {this.state.giveUpSecretWord && 
-                <Fragment>
-                    <div data-test='give-up-secret-word'>
-                        The secret word was <b>{this.state.giveUpSecretWord}</b>
-                    </div>
-                    <button data-test='new-word-button'
-                        type='submit'
-                        onClick={this.handleNewWord}
-                        className='btn btn-primary mb-2'>
-                        New Word
-                    </button>
-                </Fragment>
-            }
+            )}
         </Fragment>
     );
   }
 }
 
 const mapStateToProps = (state) => {
-    const { secretWord, success } = state;
-    return { secretWord, success };
+    const { secretWord, success, giveUp } = state;
+    return { secretWord, success, giveUp };
 }
-export default connect(mapStateToProps, { resetGame })(UnconnectedGiveUp);
+export default connect(mapStateToProps, { giveUpAction, resetGame })(UnconnectedGiveUp);

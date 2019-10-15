@@ -45,3 +45,7 @@ export const resetGame = () => {
         return dispatchSecretWord(dispatch);
     };
 }
+
+export const giveUpAction = () => {
+    return { type: actionTypes.GIVE_UP }
+}

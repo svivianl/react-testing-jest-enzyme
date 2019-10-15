@@ -1,5 +1,5 @@
 import { storeFactory } from './testUtils';
-import { guessWord, resetGame } from '../actions';
+import { guessWord, resetGame, giveUpAction } from '../actions';
 
 describe('guessedWord action dispatcher', () => {
     const secretWord = 'party';
@@ -21,7 +21,8 @@ describe('guessedWord action dispatcher', () => {
                 guessedWords: [{
                     guessedWord: unsuccessfulGuess,
                     letterMatchCount: 3
-                }]
+                }],
+                giveUp: false
             }
             expect(newState).toEqual(expectedState);
         });
@@ -34,7 +35,8 @@ describe('guessedWord action dispatcher', () => {
                 guessedWords: [{
                     guessedWord: secretWord,
                     letterMatchCount: secretWord.length
-                }]
+                }],
+                giveUp: false
             }
             expect(newState).toEqual(expectedState);
         });
@@ -55,7 +57,8 @@ describe('guessedWord action dispatcher', () => {
             const expectedState = {
                 secretWord,
                 success: false,
-                guessedWords: [...guessedWords, {guessedWord: unsuccessfulGuess, letterMatchCount: 3}]
+                guessedWords: [...guessedWords, {guessedWord: unsuccessfulGuess, letterMatchCount: 3}],
+                giveUp: false
             }
             expect(newState).toEqual(expectedState);
         });
@@ -65,7 +68,8 @@ describe('guessedWord action dispatcher', () => {
             const expectedState = {
                 secretWord,
                 success: true,
-                guessedWords: [...guessedWords, {guessedWord: secretWord, letterMatchCount: secretWord.length}]
+                guessedWords: [...guessedWords, {guessedWord: secretWord, letterMatchCount: secretWord.length}],
+                giveUp: false
             }
             expect(newState).toEqual(expectedState);
         });
@@ -96,6 +100,9 @@ describe('Reset action', () => {
         test('updates guessedWords', () => {
             expect(newState.guessedWords).toEqual([]);    
         });
+        test('updates giveUp', () => {
+            expect(newState.giveUp).toEqual(false);    
+        });
     });
     describe('before a successful guess', () => {
         beforeEach(async () => {
@@ -116,5 +123,23 @@ describe('Reset action', () => {
         test('updates guessedWords', () => {
             expect(newState.guessedWords).toEqual([]);    
         });
+        test('updates giveUp', () => {
+            expect(newState.giveUp).toEqual(false);    
+        });
     });
+});
+
+test('Give up action', () => {
+    const secretWord = 'party';
+
+    const guessedWords = [ 
+        {guessedWord: 'agile', letterMatchCount: 1},  
+        {guessedWord: 'party', letterMatchCount: 5},  
+    ];
+    const initialState = { guessedWords, secretWord, success: false, giveUp: false };
+    const expectedState = { guessedWords, secretWord, success: false, giveUp: true };
+    const store = storeFactory(initialState);
+    store.dispatch(giveUpAction());
+    const newState = store.getState();
+    expect(newState).toEqual(expectedState);    
 });
