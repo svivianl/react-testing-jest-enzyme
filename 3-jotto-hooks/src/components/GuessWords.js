@@ -1,15 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import languageContext from '../context/languageContext';
+import stringsModule from '../helpers/strings';
 
 const GuessWords = (props) => {
+    const language = React.useContext(languageContext);
+
     return (
         <div data-test='component-guessed-words'>
             {props.guessedWords.length ? (
                 <div data-test='guessed-words'>
-                    <h3>Guessed Words</h3>
+                    <h3>{stringsModule.getStringByLanguage(language, 'guessedWords')}</h3>
                     <table className='table table-sm'>
                         <thead className='thead-light'>
-                            <tr><th>Guess</th><th>Match</th><th>Index</th></tr>
+                            <tr>
+                                <th>{stringsModule.getStringByLanguage(language, 'guessColumnHeader')}</th>
+                                <th>{stringsModule.getStringByLanguage(language, 'matchingLettersColumnHeader')}</th>
+                                <th>Index</th>
+                            </tr>
                         </thead>
                         <tbody>
                             {props.guessedWords.map((word, index) => (
@@ -24,7 +32,7 @@ const GuessWords = (props) => {
                     <div data-test='number-of-guesses'>Number of guesses: {props.guessedWords.length}</div>
                 </div>
             ) : (
-                <span data-test='guess-instructions'>Try to guess the secret word!</span>
+                <span data-test='guess-instructions'>{stringsModule.getStringByLanguage(language, 'guessPrompt')}</span>
             )}
         </div>
     )

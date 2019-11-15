@@ -4,6 +4,7 @@ import { shallow } from 'enzyme';
 import { findByTestAttr, checkProps } from './testUtils';
 
 import GuessWords from '../components/GuessWords';
+import { wrap } from 'module';
 
 const defaultProps = {
     guessedWords: [
@@ -87,4 +88,22 @@ describe('if there are words guessed', () => {
         const expectedSet = new Set(guessedWords.map((rows, index) => (index + 1).toString()));
         expect(indexSet).toEqual(expectedSet);
     })
+});
+
+describe('languagePicker', () => {
+    test('renders guess intructions string in English by defualt', () => {
+        const wrapper = setup({guessedWords: []});
+        const instructions = findByTestAttr(wrapper, 'guess-instructions');
+        expect(instructions.text()).toBe('Try to guess the secret word!')
+    });
+    test('renders guess instructions string in emoji', () => {
+        const mockUseContext = jest.fn().mockReturnValue('emoji');
+        React.useContext = mockUseContext;
+        const wrapper = setup({guessedWords: []});
+        const instructions = findByTestAttr(wrapper, 'guess-instructions');
+        expect(instructions.text()).toBe('🤔🤫🔤');
+    });
+    test('', () => {
+
+    });
 });

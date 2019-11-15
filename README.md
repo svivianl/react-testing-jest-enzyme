@@ -66,4 +66,9 @@ npm i --save-dev moxios
 
 
 ### Test run
+
 Run `npm test`
+
+### useEffect
+
+`useEffect` *cannot be called on*  shallow. Check the issue open [here](http://github.com/airbnb/enzyme/issues/2086). When fixed, it will be able to use `shallow()` instead of `mount()` in `setup()`.
