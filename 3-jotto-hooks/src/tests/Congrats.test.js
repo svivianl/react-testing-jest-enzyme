@@ -2,7 +2,8 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 
 import { findByTestAttr, checkProps } from './testUtils';
-import languageContext from '../context/languageContext';
+import languageContext from '../contexts/languageContext';
+import successContext from '../contexts/successContext';
 import Congrats from '../components/Congrats';
 
 const defaultProps = {
@@ -10,12 +11,11 @@ const defaultProps = {
     language: 'en'
 };
 
-/* Note:
-    wrapping the component into a Provider does not allow us to test the **default** language
-*/
 const setup = ({language, success}) => mount(
     <languageContext.Provider value={language}>
-        <Congrats success={success}/>
+        <successContext.SuccessProvider value={[success, jest.fn()]}>
+            <Congrats/>
+        </successContext.SuccessProvider>
     </languageContext.Provider>
 );
 
@@ -36,19 +36,14 @@ test('renders without error', () => {
     expect(component.length).toBe(1);
 });
 
-test('renders no text when SUCCESS prop is false', () => {
+test('renders no text when SUCCESS is false', () => {
     const wrapper = setup({...defaultProps, success: false});
     const component = findByTestAttr(wrapper, 'component-congrats');
     expect(component.text()).toBe('');
 });
 
-test('renders no-empty congrats message when SUCCESS prop is true', () => {
+test('renders no-empty congrats message when SUCCESS is true', () => {
     const wrapper = setup({...defaultProps, success: true});
     const component = findByTestAttr(wrapper, 'congrats-message');
     expect(component.text().length).not.toBe(0);
-});
-
-test('does not throw warning with expected props', () => {
-    const expectedProps = {...defaultProps, success: false};
-    checkProps(Congrats, expectedProps);
 });

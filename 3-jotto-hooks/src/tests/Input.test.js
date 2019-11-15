@@ -2,20 +2,24 @@ import React from 'react';
 import { mount } from 'enzyme';
 
 import { findByTestAttr, checkProps } from './testUtils';
-import languageContext from '../context/languageContext';
-import Input, { UnconnectedInput } from '../components/Input';
-import { wrap } from 'module';
+import guessedWordsContext from '../contexts/guessedWordsContext';
+import languageContext from '../contexts/languageContext';
+import successContext from '../contexts/successContext';
+import Input from '../components/Input';
 
 const defaultProps = {
     language: 'en',
-    secretWord: 'party'
+    secretWord: 'party',
+    success: false
 }
-const setup = ({language, secretWord}) => {
-    // const store = storeFactory(initialState);
-    // use .dive() to get the child component
+const setup = ({language, secretWord, success}) => {
     return mount(
         <languageContext.Provider value={language}>
-            <Input secretWord={secretWord}/>
+            <successContext.SuccessProvider value={[success, jest.fn()]}>
+                <guessedWordsContext.GuessedWordsProvider>
+                    <Input secretWord={secretWord}/>
+                </guessedWordsContext.GuessedWordsProvider>
+            </successContext.SuccessProvider>
         </languageContext.Provider>
     );
 }
@@ -70,4 +74,9 @@ describe('languagePicker', () => {
         const submitButton = findByTestAttr(wrapper, 'submit-button');
         expect(submitButton.text()).toBe('🚀');
     });
+});
+
+test('Input component does not show when SUCCESS is true', () => {
+    const wrapper = setup({...defaultProps, success: true});
+    expect (wrapper.isEmptyRender()).toBe(true);
 });

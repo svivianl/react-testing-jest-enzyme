@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { findByTestAttr } from './testUtils';
-import App, { UnconnectedApp } from '../components/App';
+import App from '../components/App';
 import * as actions from '../actions/hookActions';
 
 const mockGetSecretWord = jest.fn();

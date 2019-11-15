@@ -1,10 +1,12 @@
 import React, { Fragment } from 'react';
 import * as actions from '../actions/hookActions';
-import languageContext from '../context/languageContext';
+import guessedWordsContext from '../contexts/guessedWordsContext';
+import languageContext from '../contexts/languageContext';
+import successContext from '../contexts/successContext';
 import Input from './Input';
 import LanguagePicker from './LanguagePicker';
-// import GuessWords from './GuessWords';
-// import Congrats from './Congrats';
+import Congrats from './Congrats';
+import GuessWords from './GuessedWords';
 import '../App.css';
 
 const reducer = (state, action) => {
@@ -35,7 +37,14 @@ export const UnconnectedApp = () => {
           <h1>JOTTO</h1>
           <languageContext.Provider value={state.language}>
             <LanguagePicker setLanguage={setLanguage}/>
-            <Input secretWord={state.secretWord}/>
+            <guessedWordsContext.GuessedWordsProvider>
+              <successContext.SuccessProvider>
+                <Congrats/>
+                <Input secretWord={state.secretWord}/>
+                <div>The secret word is {state.secretWord}</div>
+              </successContext.SuccessProvider>
+              <GuessWords/>
+            </guessedWordsContext.GuessedWordsProvider>
           </languageContext.Provider>
         </div>
       ):(
@@ -46,9 +55,6 @@ export const UnconnectedApp = () => {
           <p>Loading secret word</p>
         </div>
       )}
-      {/* <div>The secret word is {this.props.secretWord}</div>
-      <Congrats success={this.props.success}/>
-      <GuessWords guessedWords={this.props.guessedWords}/> */}
     </Fragment>
   );
 }

@@ -1,14 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import languageContext from '../context/languageContext';
+import languageContext from '../contexts/languageContext';
+import guessedWordsContext from '../contexts/guessedWordsContext';
 import stringsModule from '../helpers/strings';
 
-const GuessWords = (props) => {
+const GuessWords = () => {
+    const [guessedWords] = guessedWordsContext.useGuessedWords();
     const language = React.useContext(languageContext);
 
     return (
         <div data-test='component-guessed-words'>
-            {props.guessedWords.length ? (
+            {guessedWords.length ? (
                 <div data-test='guessed-words'>
                     <h3>{stringsModule.getStringByLanguage(language, 'guessedWords')}</h3>
                     <table className='table table-sm'>
@@ -20,7 +21,7 @@ const GuessWords = (props) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {props.guessedWords.map((word, index) => (
+                            {guessedWords.map((word, index) => (
                                 <tr data-test='guessed-word' key={index}>
                                     <td>{word.guessedWord}</td>
                                     <td>{word.letterMatchCount}</td>
@@ -29,7 +30,7 @@ const GuessWords = (props) => {
                             ))}
                         </tbody>
                     </table>
-                    <div data-test='number-of-guesses'>Number of guesses: {props.guessedWords.length}</div>
+                    <div data-test='number-of-guesses'>Number of guesses: {guessedWords.length}</div>
                 </div>
             ) : (
                 <span data-test='guess-instructions'>{stringsModule.getStringByLanguage(language, 'guessPrompt')}</span>
@@ -37,14 +38,5 @@ const GuessWords = (props) => {
         </div>
     )
 }
-
-GuessWords.propTypes = {
-    guessedWords: PropTypes.arrayOf(
-        PropTypes.shape({
-            guessedWord: PropTypes.string.isRequired,
-            letterMatchCount: PropTypes.number.isRequired
-        })
-    ).isRequired
-};
 
 export default GuessWords;

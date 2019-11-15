@@ -1,27 +1,24 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { findByTestAttr, checkProps } from './testUtils';
+import { findByTestAttr } from './testUtils';
+import guessedWordsContext from '../contexts/guessedWordsContext';
 
-import GuessWords from '../components/GuessWords';
-import { wrap } from 'module';
+import GuessWords from '../components/GuessedWords';
 
-const defaultProps = {
-    guessedWords: [
-        {guessedWord: 'train', letterMatchCount: 3}
-    ]
+/* Note:
+    wrapping the component into a Provider does not allow us to test the **default** language
+*/
+const setup = (guessedWords = []) => {
+    const mockUseGuessedWords = jest.fn().mockReturnValue([guessedWords, jest.fn()]);
+    guessedWordsContext.useGuessedWords = mockUseGuessedWords;
+    return shallow(<GuessWords/>)
 }
-
-const setup = (props = defaultProps) => shallow(<GuessWords {...props}/>);
-
-test('does not throw warning with expected props', () => {
-    checkProps(GuessWords, defaultProps);
-});
 
 describe('if there are no words with expected props', () => {
     
     let wrapper;
-    beforeEach(() => wrapper = setup({guessedWords: []}));
+    beforeEach(() => wrapper = setup([]));
 
     test('renders without error', () => {
         const component = findByTestAttr(wrapper, 'component-guessed-words');
@@ -55,7 +52,7 @@ describe('if there are words guessed', () => {
 
     let wrapper;
 
-    beforeEach(() => wrapper = setup({ guessedWords }));
+    beforeEach(() => wrapper = setup(guessedWords));
 
     test('renders without error', () => {
         const component = findByTestAttr(wrapper, 'component-guessed-words');
@@ -92,14 +89,14 @@ describe('if there are words guessed', () => {
 
 describe('languagePicker', () => {
     test('renders guess intructions string in English by defualt', () => {
-        const wrapper = setup({guessedWords: []});
+        const wrapper = setup([]);
         const instructions = findByTestAttr(wrapper, 'guess-instructions');
         expect(instructions.text()).toBe('Try to guess the secret word!')
     });
     test('renders guess instructions string in emoji', () => {
         const mockUseContext = jest.fn().mockReturnValue('emoji');
         React.useContext = mockUseContext;
-        const wrapper = setup({guessedWords: []});
+        const wrapper = setup([]);
         const instructions = findByTestAttr(wrapper, 'guess-instructions');
         expect(instructions.text()).toBe('🤔🤫🔤');
     });
